@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body {
+  @apply bg-bg text-text antialiased;
+}
+
+body {
+  @apply min-h-screen bg-surface-gradient;
+}
+
+a {
+  @apply transition-colors;
+}
+
+.card-surface {
+  @apply rounded-2xl border border-border bg-bg-elevated/75 shadow-card backdrop-blur-sm;
+}
+
+.section-title {
+  @apply mb-4 text-xl font-semibold tracking-tight text-text;
+}
+
+.marquee-track {
+  width: max-content;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee {
+    animation: none !important;
+    transform: translateX(0) !important;
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "name": "Aurick Das",
+  "headline": "Software Engineer | Building fast, polished web products",
+  "bio": "I design and ship web experiences focused on speed, usability, and clean visual systems. This page is my quick link hub and project showcase.",
+  "location": "Remote",
+  "primaryCta": {
+    "id": "book-call",
+    "label": "Book a Call",
+    "url": "https://cal.com/example"
+  }
+}
