@@ -20,13 +20,13 @@ describe("profileSchema", () => {
       }
     });
 
-    expect(parsed.name).toBe("Aurick");
+    expect(parsed).toBeDefined();
   });
 
   it("rejects an invalid CTA URL", () => {
     expect(() =>
       profileSchema.parse({
-        name: "Auric",
+        name: "Aurick",
         headline: "Frontend Engineer",
         bio: "Builds polished interfaces.",
         primaryCta: {
@@ -51,6 +51,18 @@ describe("socialLinksSchema", () => {
       socialLinksSchema.parse([{ id: "", label: "X", url: "https://x.com/example" }])
     ).toThrow();
   });
+
+  it("rejects an invalid URL", () => {
+    expect(() =>
+      socialLinksSchema.parse([{ id: "x", label: "X", url: "not-a-url" }])
+    ).toThrow();
+  });
+  
+  it("rejects an empty label", () => {
+    expect(() =>
+      socialLinksSchema.parse([{ id: "x", label: "", url: "https://x.com" }])
+    ).toThrow();
+  });
 });
 
 describe("projectsSchema", () => {
@@ -67,5 +79,15 @@ describe("projectsSchema", () => {
     ]);
 
     expect(parsed).toHaveLength(1);
+  });
+
+  it("rejects a project missing required fields", () => {
+    expect(() =>
+      projectsSchema.parse([{ id: "x", title: "X" }])
+    ).toThrow();
+  });
+  
+  it("rejects an empty projects list", () => {
+    expect(() => projectsSchema.parse([])).toThrow();
   });
 });

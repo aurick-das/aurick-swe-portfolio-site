@@ -4,8 +4,10 @@ type TechStackMarqueeProps = {
   items: string[];
 };
 
+export const DEFAULT_TECH_STACK = ["Next.js", "TypeScript", "Tailwind CSS"];
+
 export function TechStackMarquee({ items }: TechStackMarqueeProps) {
-  const safeItems = items.length > 0 ? items : ["Next.js", "TypeScript", "Tailwind CSS"];
+  const safeItems = items.length > 0 ? items : DEFAULT_TECH_STACK;
   const renderItems = (suffix: string) =>
     safeItems.map((item, index) => (
       <li

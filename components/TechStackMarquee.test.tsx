@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
-import { TechStackMarquee } from "@/components/TechStackMarquee";
+import { TechStackMarquee, DEFAULT_TECH_STACK } from "@/components/TechStackMarquee";
 
 describe("TechStackMarquee", () => {
   it("renders two seamless marquee tracks for provided items", () => {
@@ -13,14 +13,14 @@ describe("TechStackMarquee", () => {
 
     const list = screen.getAllByRole("list", { hidden: true });
     expect(list).toHaveLength(2);
+    expect(list[0]).not.toHaveAttribute("aria-hidden");
     expect(list[1]).toHaveAttribute("aria-hidden", "true");
   });
 
-  it("falls back to defaults when items are empty across both tracks", () => {
+  it("falls back to defaults when items are empty", () => {
     render(<TechStackMarquee items={[]} />);
-
-    expect(screen.getAllByText("Next.js")).toHaveLength(2);
-    expect(screen.getAllByText("TypeScript")).toHaveLength(2);
-    expect(screen.getAllByText("Tailwind CSS")).toHaveLength(2);
+    for (const item of DEFAULT_TECH_STACK) {
+      expect(screen.getAllByText(item)).toHaveLength(2);
+    }
   });
 });

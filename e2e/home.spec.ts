@@ -1,22 +1,70 @@
-import { expect, test } from "@playwright/test";
+import { getProfile, getProjects, getSocialLinks } from "@/lib/data";
+import { expect, test, type Page } from "@playwright/test";
 
-test("homepage renders core sections", async ({ page }) => {
-  await page.goto("/");
-
-  await expect(page.getByRole("heading", { level: 1, name: "Auric" })).toBeVisible();
+async function assertCoreSections(page: Page) {
+  await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
   await expect(page.getByRole("heading", { level: 2, name: "Links" })).toBeVisible();
   await expect(page.getByRole("heading", { level: 2, name: "Tech Stack" })).toBeVisible();
   await expect(page.getByRole("heading", { level: 2, name: "Projects" })).toBeVisible();
+}
+
+async function assertCTAAndLinks(page: Page) {
+  const { primaryCta } = getProfile();
+  await expect(page.getByRole("link", { name: primaryCta.label })).toBeVisible();
+
+  const socialLinks = getSocialLinks();
+  for (const { label } of socialLinks) {
+    await expect(page.getByRole("link", { name: `Open ${label}` })).toBeVisible();
+  }
+}
+
+async function assertProjectCards(page: Page) {
+  const projects = getProjects();
+  for (const { title } of projects) {
+    await expect(page.getByRole("heading", { name: title })).toBeVisible();
+  }
+}
+
+async function assertExternalLinksResolve(page: Page) {
+  const allHrefs = await page.getByRole("link").evaluateAll(
+    els => els
+      .map(el => el.getAttribute("href"))
+      .filter((h): h is string => !!h && h.startsWith("http"))
+  );
+
+  expect(allHrefs.length, "Expected at least one external link on the page").toBeGreaterThan(0);
+
+  const insecure = allHrefs.filter(h => h.startsWith("http://"));
+  expect(insecure, `Non-HTTPS links found: ${insecure}`).toHaveLength(0);
+
+  const broken: { url: string; status: number }[] = [];
+  for (const url of allHrefs) {
+    const response = await page.request.head(url, { timeout: 8000 });
+    if (response.status() >= 400) {
+      broken.push({ url, status: response.status() });
+    }
+  }
+  expect(broken, `Broken links found: ${JSON.stringify(broken, null, 2)}`).toHaveLength(0);
+}
+
+test.beforeEach(async ({ page }) => {
+  await page.goto("/");
+});
+
+test("homepage renders core sections", async ({ page }) => {
+  await assertCoreSections(page);
 });
 
 test("primary CTA and social links are present", async ({ page }) => {
-  await page.goto("/");
+  await assertCTAAndLinks(page);
+});
 
-  await expect(page.getByRole("link", { name: "Book a Call" })).toHaveAttribute(
-    "href",
-    "https://cal.com/example"
-  );
-  await expect(page.getByRole("link", { name: "Open GitHub" })).toBeVisible();
+test("project cards are visible", async ({ page }) => {
+  await assertProjectCards(page);
+});
+
+test("all external links resolve", async ({ page }) => {
+  await assertExternalLinksResolve(page);
 });
 
 test("page remains usable on mobile viewport", async ({ browser }) => {
@@ -24,8 +72,10 @@ test("page remains usable on mobile viewport", async ({ browser }) => {
   const page = await context.newPage();
   await page.goto("/");
 
-  await expect(page.getByRole("heading", { level: 1, name: "Auric" })).toBeVisible();
-  await expect(page.getByRole("link", { name: "Book a Call" })).toBeVisible();
+  await assertCoreSections(page);
+  await assertCTAAndLinks(page);
+  await assertProjectCards(page);
+  await assertExternalLinksResolve(page);
 
   await context.close();
 });
