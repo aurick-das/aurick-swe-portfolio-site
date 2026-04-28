@@ -1,57 +1,75 @@
 # Link-in-Bio Portfolio
 
-High-performance single-page portfolio built with Next.js 15, Tailwind CSS, and local JSON-driven content.
+High-performance single-page portfolio built with Next.js 15, TypeScript, Tailwind CSS, and local JSON-driven content.
 
 ## Features
 
-- Dark modern UI with reusable section/card primitives.
-- Animated Tech Stack marquee sourced from `data/tech-stack.json`.
-- Marquee pauses on hover and respects reduced-motion settings.
-- Project cards mapped from `data/projects.json`.
-- Runtime JSON schema validation via Zod.
+- JSON-driven profile, social links, projects, and tech stack content.
+- Runtime schema validation with Zod (`lib/schema.ts`) before rendering.
+- Accessible UI composition with reusable section/card components.
+- Animated two-track tech marquee with hover pause and reduced-motion support.
+- Project sorting logic that prioritizes featured projects.
 
 ## Project Structure
 
-- `app/page.tsx`: composition root for all sections.
-- `components/*`: section and card UI components.
-- `data/*.json`: editable local content.
-- `lib/schema.ts`: Zod schemas for data contracts.
-- `lib/data.ts`: data parsing and sorting utilities.
+- `app/page.tsx`: page composition root.
+- `app/layout.tsx`: app metadata and root layout.
+- `components/*`: presentational UI components.
+- `data/*.json`: editable local content source.
+- `lib/schema.ts`: Zod contracts for content.
+- `lib/data.ts`: parsing and sorting utilities.
+- `e2e/home.spec.ts`: Playwright smoke/e2e tests.
 
 ## Local Setup
 
-1. Install Node.js with npm available.
-2. Install dependencies:
+1. Install dependencies:
    - `npm install`
-3. Start development server:
+2. Run the app:
    - `npm run dev`
-4. Quality checks:
+3. Basic quality checks:
    - `npm run typecheck`
    - `npm run lint`
    - `npm run build`
 
-## Testing Commands
+## Testing
 
-Run these commands from the project root:
+### Unit and Component
 
-- `npm run test:unit`: runs unit tests for schema and data logic in `lib/`.
-- `npm run test:component`: runs component tests in `components/`.
-- `npm run test:e2e`: runs Playwright smoke tests in `e2e/`.
-- `npm run test:lighthouse`: builds the app and runs Lighthouse assertions against local production output.
-- `npm run test:local`: full local gate (`typecheck`, `lint`, `build`, unit, component, e2e, and Lighthouse).
+- `npm run test:unit`: tests data and schema logic in `lib/`.
+- `npm run test:component`: tests UI behavior in `components/`.
 
-Recommended workflow:
+### End-to-End
 
-1. During development, run targeted tests (`test:unit` or `test:component`).
-2. Before finalizing changes, run `npm run test:e2e`.
-3. Before pushing, run `npm run test:local`.
+- `npm run test:e2e`: runs Playwright tests in `e2e/` against a local app server.
 
-## Vercel Deployment
+### Lighthouse (Desktop + Mobile)
 
-1. Push this project to GitHub.
-2. Import the repository in Vercel.
-3. Framework preset should auto-detect as Next.js.
-4. Deploy from the main branch.
-5. Validate build output and monitor Web Vitals in Vercel analytics.
+- `npm run test:lighthouse:desktop`: desktop Lighthouse assertions using `lighthouserc.desktop.json`.
+- `npm run test:lighthouse:mobile`: mobile Lighthouse assertions using `lighthouserc.mobile.json`.
+- `npm run test:lighthouse`: build + desktop + mobile Lighthouse runs.
 
-No environment variables are required for the current JSON-based portfolio setup.
+### Full Local Gate
+
+- `npm run test:local`: `typecheck`, `lint`, `build`, unit, component, e2e, and both Lighthouse modes.
+
+Recommended flow:
+1. Run targeted tests while developing (`test:unit` / `test:component`).
+2. Run `npm run test:e2e` before finalizing UI/content changes.
+3. Run `npm run test:local` before pushing.
+
+## CI / CD
+
+- GitHub Actions workflow: `.github/workflows/ci.yml`
+  - Quality + Unit + Component
+  - Playwright E2E
+  - Lighthouse (Desktop + Mobile)
+- Production deployment target: Vercel (from protected `main` branch).
+
+## Deployment (Vercel)
+
+1. Push repository to GitHub.
+2. Import repository in Vercel.
+3. Confirm framework preset is Next.js.
+4. Deploy from `main`.
+
+No environment variables are required for the current JSON-based setup.
