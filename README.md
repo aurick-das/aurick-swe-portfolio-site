@@ -24,12 +24,24 @@ High-performance single-page portfolio built with Next.js 15, TypeScript, Tailwi
 
 1. Install dependencies:
    - `npm install`
-2. Run the app:
+2. (Optional) create `.env.local`:
+   - `NEXT_PUBLIC_SITE_URL=https://your-domain.com`
+3. Run the app:
    - `npm run dev`
-3. Basic quality checks:
+4. Basic quality checks:
    - `npm run typecheck`
    - `npm run lint`
    - `npm run build`
+
+## Environment Variables
+
+The app uses `process.env` values parsed in `lib/env.ts`.
+- `NEXT_PUBLIC_SITE_URL` (optional): sets `metadataBase` in `app/layout.tsx`.
+
+For GitHub Actions, set repository secrets:
+1. Open GitHub repo -> `Settings` -> `Secrets and variables` -> `Actions`.
+2. Add secret `NEXT_PUBLIC_SITE_URL`.
+3. Re-run CI.
 
 ## Testing
 
@@ -72,4 +84,4 @@ Recommended flow:
 3. Confirm framework preset is Next.js.
 4. Deploy from `main`.
 
-No environment variables are required for the current JSON-based setup.
+Environment variables are optional locally, but recommended for CI and production consistency.
