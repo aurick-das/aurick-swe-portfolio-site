@@ -4,8 +4,8 @@
     "title": "Habit Loop",
     "description": "A streak-based habit tracker with data visualizations and offline-first support.",
     "tech": ["Next.js", "TypeScript", "Tailwind CSS", "Prisma"],
-    "repoUrl": "https://github.com/example/habit-loop",
-    "liveUrl": "https://habit-loop.example.com",
+    "repoUrl": "https://github.com/actions/toolkit",
+    "liveUrl": "https://www.google.com/",
     "featured": true,
     "order": 1
   },
@@ -14,8 +14,8 @@
     "title": "Invoice OS",
     "description": "A billing dashboard that automates recurring invoices and payment reminders.",
     "tech": ["React", "Node.js", "PostgreSQL"],
-    "repoUrl": "https://github.com/example/invoice-os",
-    "liveUrl": "https://invoice-os.example.com",
+    "repoUrl": "https://github.com/actions/add-to-project",
+    "liveUrl": "https://www.google.com/",
     "featured": true,
     "order": 2
   },
@@ -24,8 +24,8 @@
     "title": "Shipmate",
     "description": "A release coordination tool for teams to plan, track, and announce deployments.",
     "tech": ["Next.js", "Zod", "Vercel"],
-    "repoUrl": "https://github.com/example/shipmate",
-    "liveUrl": "https://shipmate.example.com",
+    "repoUrl": "https://github.com/actions/starter-workflows",
+    "liveUrl": "https://www.google.com/",
     "featured": false,
     "order": 3
   },
@@ -34,7 +34,7 @@
     "title": "Pixelboard",
     "description": "A social moodboard app with collaborative collections and image annotation.",
     "tech": ["React", "Tailwind CSS", "Docker"],
-    "repoUrl": "https://github.com/example/pixelboard",
+    "repoUrl": "https://github.com/actions/humans.txt",
     "featured": false,
     "order": 4
   }
