@@ -35,13 +35,35 @@ async function assertExternalLinksResolve(page: Page) {
   expect(allHrefs.length, "Expected at least one external link on the page").toBeGreaterThan(0);
 
   const insecure = allHrefs.filter(h => h.startsWith("http://"));
-  expect(insecure, `Non-HTTPS links found: ${insecure}`).toHaveLength(0);
+  expect(insecure, `Non-HTTPS links found: ${insecure.join(", ")}`).toHaveLength(0);
 
+  const SKIP_DOMAINS = [  // some domains block bots
+    "linkedin.com",
+    "instagram.com",
+  ];
+  
   const broken: { url: string; status: number }[] = [];
   for (const url of allHrefs) {
-    const response = await page.request.head(url, { timeout: 8000 });
+    if (SKIP_DOMAINS.some(domain => url.includes(domain))) continue;
+  
+    const response = await page.request.head(url, {
+      timeout: 8000,
+      headers: {
+        "user-agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+      },
+    });
     if (response.status() >= 400) {
-      broken.push({ url, status: response.status() });
+      const response_backup = await page.request.get(url, {
+        timeout: 8000,
+        headers: {
+          "user-agent":
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+        },
+      });
+      if (response_backup.status() >= 400) {
+        broken.push({ url, status: response.status() });
+      }
     }
   }
   expect(broken, `Broken links found: ${JSON.stringify(broken, null, 2)}`).toHaveLength(0);

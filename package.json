@@ -12,7 +12,9 @@
     "test:unit": "vitest run --dir lib",
     "test:component": "vitest run --dir components",
     "test:e2e": "playwright test",
-    "test:lighthouse": "npm run build && lhci autorun --config=./lighthouserc.json",
+    "test:lighthouse:desktop": "lhci autorun --config=./lighthouserc.desktop.json",
+    "test:lighthouse:mobile": "lhci autorun --config=./lighthouserc.mobile.json",
+    "test:lighthouse": "npm run build && npm run test:lighthouse:desktop && npm run test:lighthouse:mobile",
     "test:local": "npm run typecheck && npm run lint && npm run build && npm run test:unit && npm run test:component && npm run test:e2e && npm run test:lighthouse"
   },
   "dependencies": {

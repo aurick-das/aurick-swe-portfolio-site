@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import { describe, expect, it, beforeEach } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import { SocialLinks } from "@/components/SocialLinks";
 import type { SocialLink } from "@/lib/types";
@@ -10,11 +10,8 @@ const links: SocialLink[] = [
 ];
 
 describe("SocialLinks", () => {
-  beforeEach(() => {
-    render(<SocialLinks links={links} />);
-  });
-
   it("renders all provided links with accessible labels", () => {
+    render(<SocialLinks links={links} />);
     expect(screen.getByRole("link", { name: "Open GitHub" })).toHaveAttribute(
       "href",
       "https://github.com/example"
@@ -26,6 +23,7 @@ describe("SocialLinks", () => {
   });
 
   it("renders target and rel attributes for external navigation", () => {
+    render(<SocialLinks links={links} />);
     for (const link of links) {
       const anchor = screen.getByRole("link", { name: `Open ${link.label}` });
       expect(anchor).toHaveAttribute("target", "_blank");
