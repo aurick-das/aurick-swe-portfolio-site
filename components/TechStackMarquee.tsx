@@ -26,7 +26,7 @@ export function TechStackMarquee({ items }: TechStackMarqueeProps) {
         <div className="pointer-events-none absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-bg-elevated to-transparent" />
         <div className="marquee-track flex w-max animate-marquee [will-change:transform] group-hover:[animation-play-state:paused]">
           <ul className="flex shrink-0 items-center gap-3 pr-1.5">{renderItems("a")}</ul>
-          <ul className="flex shrink-0 items-center gap-3 pl-1.5" aria-hidden="true">
+          <ul className="flex shrink-0 items-center gap-3 pl-1.5" aria-hidden="true" role="presentation">
             {renderItems("b")}
           </ul>
         </div>
