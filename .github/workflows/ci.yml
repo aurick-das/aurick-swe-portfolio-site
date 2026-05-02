@@ -50,6 +50,8 @@ jobs:
           path: .next
           key: build-${{ github.sha }}
 
+      # Vitest: when CI is set, vitest.config.ts uses verbose + github-actions reporters
+      # and sequential test files so logs show failing suite/test and file paths clearly.
       - name: Unit tests
         run: npm run test:unit
 
