@@ -5,16 +5,20 @@ import { TechStackMarquee, DEFAULT_TECH_STACK } from "@/components/TechStackMarq
 
 describe("TechStackMarquee", () => {
   it("renders two seamless marquee tracks for provided items", () => {
-    render(<TechStackMarquee items={["Next.js", "TypeScript"]} />);
+    const { container } = render(<TechStackMarquee items={["Next.js", "TypeScript"]} />);
 
     // Each item appears once per track (2 tracks total).
     expect(screen.getAllByText("Next.js")).toHaveLength(2);
     expect(screen.getAllByText("TypeScript")).toHaveLength(2);
 
-    const list = screen.getAllByRole("list", { hidden: true });
-    expect(list).toHaveLength(2);
-    expect(list[0]).not.toHaveAttribute("aria-hidden");
-    expect(list[1]).toHaveAttribute("aria-hidden", "true");
+    // Only the first `<ul>` is a list; the duplicate uses role="presentation".
+    expect(screen.getAllByRole("list")).toHaveLength(1);
+    expect(screen.getByRole("list")).not.toHaveAttribute("aria-hidden");
+
+    const decorative = container.querySelector(
+      "ul[aria-hidden='true'][role='presentation']"
+    );
+    expect(decorative).toBeInstanceOf(HTMLUListElement);
   });
 
   it("falls back to defaults when items are empty", () => {
