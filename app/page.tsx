@@ -14,7 +14,7 @@ export default function HomePage() {
     <main className="mx-auto flex min-h-screen w-full max-w-5xl flex-col gap-8 px-4 py-10 sm:px-6 lg:px-8">
       <HeroSection profile={profile} />
       <section>
-        <h2 className="section-title">Zeldas</h2>
+        <h2 className="section-title">Links</h2>
         <SocialLinks links={socialLinks} />
       </section>
       <TechStackMarquee items={techStack.items} />
