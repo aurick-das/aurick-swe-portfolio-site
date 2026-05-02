@@ -139,4 +139,5 @@ jobs:
         with:
           name: lighthouseci
           path: .lighthouseci
+          include-hidden-files: true
           if-no-files-found: ignore
