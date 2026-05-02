@@ -10,7 +10,7 @@ export function HeroSection({ profile }: HeroSectionProps) {
       <p className="mb-2 text-sm uppercase tracking-[0.2em] text-text-muted">
         Link In Bio
       </p>
-      <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">{profile.name}</h1>
+      <p className="text-3xl font-bold tracking-tight sm:text-4xl">{profile.name}</p>
       <p className="mt-2 text-lg text-accent">{profile.headline}</p>
       <p className="mt-4 max-w-2xl text-text-muted">{profile.bio}</p>
       {profile.location ? (
