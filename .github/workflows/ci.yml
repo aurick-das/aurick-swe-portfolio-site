@@ -40,16 +40,6 @@ jobs:
       - name: Lint
         run: npm run lint
 
-      - name: Build
-        run: npm run build
-
-        # Cache the build output for downstream jobs
-      - name: Cache build output
-        uses: actions/cache/save@v5
-        with:
-          path: .next
-          key: build-${{ github.sha }}
-
       # Vitest: when CI is set, vitest.config.ts uses verbose + github-actions reporters
       # and sequential test files so logs show failing suite/test and file paths clearly.
       - name: Unit tests
@@ -57,6 +47,16 @@ jobs:
 
       - name: Component tests
         run: npm run test:component
+
+      - name: Build
+        run: npm run build
+
+      # Cache the build output for downstream jobs
+      - name: Cache build output
+        uses: actions/cache/save@v5
+        with:
+          path: .next
+          key: build-${{ github.sha }}
 
   e2e:
     name: E2E (Playwright)
