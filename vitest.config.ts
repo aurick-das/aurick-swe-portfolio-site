@@ -1,11 +1,13 @@
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vitest/config";
-import tsconfigPaths from "vite-tsconfig-paths";
 
 const isCi = Boolean(process.env.CI);
 
 export default defineConfig({
-  plugins: [react(), tsconfigPaths()],
+  plugins: [react()],
+  resolve: {
+    tsconfigPaths: true
+  },
   test: {
     environment: "jsdom",
     setupFiles: ["./vitest.setup.ts"],
