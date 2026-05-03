@@ -10,14 +10,14 @@ export const metadata: Metadata = {
   description:
     "A high-performance single-page portfolio with projects, social links, and a live tech stack marquee.",
   openGraph: {
-    title: "Aurick Portfolio",
+    title: "Aurick's Portfolio",
     description:
       "A high-performance single-page portfolio with projects, social links, and a live tech stack marquee.",
     type: "website"
   },
   twitter: {
     card: "summary_large_image",
-    title: "Aurick Portfolio",
+    title: "Aurick's Portfolio",
     description:
       "A high-performance single-page portfolio with projects, social links, and a live tech stack marquee."
   }
