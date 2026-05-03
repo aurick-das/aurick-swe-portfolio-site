@@ -20,6 +20,7 @@ env:
 
 jobs:
   changes:
+    name: Detect Changed Paths
     runs-on: ubuntu-latest
     outputs:
       frontend: ${{ steps.filter.outputs.frontend }}
