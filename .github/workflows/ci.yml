@@ -1,13 +1,15 @@
+# PR + push to main: push populates GitHub checks on the default branch so Vercel
+# deployment checks can discover required job names. E2E/Lighthouse skip when paths
+# do not match filters (saves time); workflow_dispatch runs the full pipeline.
 name: CI
 
 on:
   pull_request:
     branches: [main]
-# Branch Protection enabled: PRs required, status checks required.
-# Hence push: [main] is redundant.
-  # push:
-  #   branches: [main]
-  workflow_dispatch:  
+  push:
+    # Included to allow Vercel to discover the job names.
+    branches: [main]
+  workflow_dispatch:
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -17,8 +19,52 @@ env:
   NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
 
 jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      frontend: ${{ steps.filter.outputs.frontend }}
+      deps: ${{ steps.filter.outputs.deps }}
+      tests: ${{ steps.filter.outputs.tests }}
+      lighthouse_ci: ${{ steps.filter.outputs.lighthouse_ci }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Detect changed paths
+        uses: dorny/paths-filter@v4
+        id: filter
+        with:
+          filters: |
+            frontend:
+              - 'app/**'
+              - 'components/**'
+              - 'data/**'
+              - 'lib/**'
+              - 'public/**'
+              - 'next.config.*'
+              - 'tailwind.config.*'
+              - 'postcss.config.*'
+              - 'middleware.ts'
+              - 'instrumentation.ts'
+            deps:
+              - 'package.json'
+              - 'package-lock.json'
+            tests:
+              - 'e2e/**'
+              - '**/*.test.*'
+              - '**/*.spec.*'
+              - 'vitest.config.*'
+              - 'vitest.setup.ts'
+              - 'playwright.config.*'
+            lighthouse_ci:
+              - 'lighthouserc*.json'
+              - 'scripts/run-lighthouse.mjs'
+
   quality-and-tests:
     name: Quality + Unit + Component
+    needs: [changes]
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
@@ -49,10 +95,34 @@ jobs:
       - name: Component tests
         run: npm run test:component
 
+  build:
+    name: Build (Next.js)
+    needs: [changes, quality-and-tests]
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+      needs.changes.outputs.frontend == 'true' ||
+      needs.changes.outputs.deps == 'true' ||
+      needs.changes.outputs.tests == 'true' ||
+      needs.changes.outputs.lighthouse_ci == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
       - name: Build
         run: npm run build
 
-      # Cache the build output for downstream jobs
       - name: Cache build output
         uses: actions/cache/save@v5
         with:
@@ -61,7 +131,13 @@ jobs:
 
   e2e:
     name: E2E (Playwright)
-    needs: quality-and-tests
+    needs: [changes, build]
+    # Runs only when path filters match; if `build` was skipped (no matching paths), this job is skipped via `needs`.
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+      needs.changes.outputs.frontend == 'true' ||
+      needs.changes.outputs.tests == 'true' ||
+      needs.changes.outputs.deps == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
@@ -108,7 +184,12 @@ jobs:
 
   lighthouse:
     name: Lighthouse
-    needs: quality-and-tests
+    needs: [changes, build]
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+      needs.changes.outputs.frontend == 'true' ||
+      needs.changes.outputs.deps == 'true' ||
+      needs.changes.outputs.lighthouse_ci == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 25
 
@@ -119,7 +200,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v6
         with:
-          node-version: 24  
+          node-version: 24
           cache: npm
 
       - name: Install dependencies
