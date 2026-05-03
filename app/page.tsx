@@ -14,7 +14,7 @@ export default function HomePage() {
     <>
       <HeroSection profile={profile} />
       <section>
-        <h2 className="section-title">Links</h2>
+        <h2 className="section-title">Zeldas</h2>
         <SocialLinks links={socialLinks} />
       </section>
       <TechStackMarquee items={techStack.items} />
