@@ -3,7 +3,8 @@ name: CI
 on:
   pull_request:
     branches: [main]
-  # Branch Protection enabled: PRs required, status checks required 
+# Branch Protection enabled: PRs required, status checks required.
+# Hence push: [main] is redundant.
   # push:
   #   branches: [main]
   workflow_dispatch:  
@@ -40,21 +41,23 @@ jobs:
       - name: Lint
         run: npm run lint
 
-      - name: Build
-        run: npm run build
-
-        # Cache the build output for downstream jobs
-      - name: Cache build output
-        uses: actions/cache/save@v5
-        with:
-          path: .next
-          key: build-${{ github.sha }}
-
+      # Vitest: when CI is set, vitest.config.ts uses verbose + github-actions reporters
+      # and sequential test files so logs show failing suite/test and file paths clearly.
       - name: Unit tests
         run: npm run test:unit
 
       - name: Component tests
         run: npm run test:component
+
+      - name: Build
+        run: npm run build
+
+      # Cache the build output for downstream jobs
+      - name: Cache build output
+        uses: actions/cache/save@v5
+        with:
+          path: .next
+          key: build-${{ github.sha }}
 
   e2e:
     name: E2E (Playwright)
@@ -137,4 +140,5 @@ jobs:
         with:
           name: lighthouseci
           path: .lighthouseci
+          include-hidden-files: true
           if-no-files-found: ignore

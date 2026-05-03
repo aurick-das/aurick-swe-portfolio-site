@@ -14,7 +14,7 @@
     "test:e2e": "playwright test",
     "test:lighthouse:desktop": "lhci autorun --config=./lighthouserc.desktop.json",
     "test:lighthouse:mobile": "lhci autorun --config=./lighthouserc.mobile.json",
-    "test:lighthouse": "npm run build && npm run test:lighthouse:desktop && npm run test:lighthouse:mobile",
+    "test:lighthouse": "node ./scripts/run-lighthouse.mjs",
     "test:local": "npm run typecheck && npm run lint && npm run build && npm run test:unit && npm run test:component && npm run test:e2e && npm run test:lighthouse"
   },
   "dependencies": {
@@ -43,7 +43,6 @@
     "start-server-and-test": "^3.0.2",
     "tailwindcss": "^3.4.17",
     "typescript": "^5.7.2",
-    "vite-tsconfig-paths": "^6.1.1",
     "vitest": "^4.1.5"
   }
 }
