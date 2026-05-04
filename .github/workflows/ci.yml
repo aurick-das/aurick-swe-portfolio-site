@@ -42,6 +42,7 @@ jobs:
               - 'app/**'
               - 'components/**'
               - 'data/**'
+              - 'posts/**'
               - 'lib/**'
               - 'public/**'
               - 'next.config.*'
