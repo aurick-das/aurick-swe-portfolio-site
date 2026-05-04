@@ -22,7 +22,8 @@ export async function generateStaticParams() {
   return getAllPostSlugs().map((slug) => ({ slug }));
 }
 
-export const dynamicParams = false;
+/** Allow unknown slugs at request time so the page can call `notFound()` and render `app/blog/not-found.tsx`. */
+export const dynamicParams = true;
 
 export async function generateMetadata({ params }: PostPageProps): Promise<Metadata> {
   const { slug } = await params;
