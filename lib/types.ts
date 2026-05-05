@@ -28,3 +28,16 @@ export type Project = {
   order: number;
   image?: string;
 };
+
+export type PostMeta = {
+  slug: string;
+  title: string;
+  date: string;
+  summary: string;
+  tags?: string[];
+  draft?: boolean;
+};
+
+export type Post = PostMeta & {
+  html: string;
+};

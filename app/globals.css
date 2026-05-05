@@ -27,6 +27,67 @@ a {
   @apply mb-4 text-xl font-semibold tracking-tight text-text;
 }
 
+/* Blog post body (markdown rendered to HTML) */
+.prose {
+  @apply text-text;
+}
+
+.prose :where(h1, h2, h3) {
+  @apply font-semibold tracking-tight text-text;
+}
+
+.prose h1 {
+  @apply mt-8 text-3xl first:mt-0 sm:text-4xl;
+}
+
+.prose h2 {
+  @apply mt-8 text-2xl first:mt-0 sm:text-3xl;
+}
+
+.prose h3 {
+  @apply mt-6 text-xl first:mt-0 sm:text-2xl;
+}
+
+.prose :where(p) {
+  @apply mt-4 text-base leading-relaxed text-text-muted first:mt-0;
+}
+
+.prose :where(ul, ol) {
+  @apply mt-4 space-y-2 pl-6 text-text-muted;
+}
+
+.prose ul {
+  @apply list-disc;
+}
+
+.prose ol {
+  @apply list-decimal;
+}
+
+.prose :where(li) {
+  @apply leading-relaxed;
+}
+
+.prose :where(a) {
+  @apply font-medium text-accent underline decoration-accent/40 underline-offset-2 hover:text-accent-hover;
+}
+
+.prose :where(code) {
+  @apply rounded-md bg-bg-soft px-1.5 py-0.5 text-sm text-text;
+}
+
+.prose :where(pre) {
+  @apply card-surface mt-4 overflow-x-auto p-4 text-sm;
+}
+
+.prose :where(pre code) {
+  @apply bg-transparent p-0 text-inherit;
+}
+
+.prose :where(blockquote) {
+  @apply mt-4 border-l-4 border-accent/40 pl-4 italic text-text-muted;
+}
+
 .marquee-track {
   width: max-content;
 }

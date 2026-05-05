@@ -31,5 +31,16 @@ export const projectSchema = z.object({
   image: z.string().optional()
 });
 
+export const postFrontmatterSchema = z.object({
+  title: z.string().min(1),
+  date: z
+    .union([z.string(), z.date()])
+    .transform((value) => (value instanceof Date ? value.toISOString() : value))
+    .refine((value) => !Number.isNaN(Date.parse(value)), "Invalid date"),
+  summary: z.string().min(1),
+  tags: z.array(z.string().min(1)).optional(),
+  draft: z.boolean().optional()
+});
+
 export const projectsSchema = z.array(projectSchema).min(1);
 export const socialLinksSchema = z.array(socialLinkSchema).min(1);
